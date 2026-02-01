@@ -9,32 +9,30 @@ import (
 	"syscall"
 	"time"
 
-	apphttp "github.com/inkuroshev/perf-assist-backend/internal/http"
 	"github.com/rs/cors"
+
+	"github.com/inkuroshev/perf-assist-backend/internal/server"
 )
 
 func main() {
-	mux := http.NewServeMux()
-
-	// Регистрация всех HTTP-ручек в одном месте
-	server := apphttp.NewServer()
-	server.Register(mux)
-
+	// базовый адрес
 	addr := ":8080"
 	if v := os.Getenv("PORT"); v != "" {
 		addr = ":" + v
 	}
 
-	corsHandler := cors.New(cors.Options{
-		AllowedOrigins:   []string{"http://localhost:5173"},
-		AllowedMethods:   []string{http.MethodGet, http.MethodPost, http.MethodOptions},
-		AllowedHeaders:   []string{"Content-Type"},
-		AllowCredentials: false,
-	})
+	// создаём Gin-роутер через внутренний серверный слой
+	r := server.NewRouter()
 
+	// оборачиваем Gin в стандартный http.Server для graceful shutdown
 	srv := &http.Server{
-		Addr:         addr,
-		Handler:      corsHandler.Handler(mux),
+		Addr: addr,
+		Handler: cors.New(cors.Options{
+			AllowedOrigins:   []string{"http://localhost:5173"},
+			AllowedMethods:   []string{http.MethodGet, http.MethodPost, http.MethodPut, http.MethodDelete, http.MethodOptions},
+			AllowedHeaders:   []string{"Content-Type"},
+			AllowCredentials: false,
+		}).Handler(r),
 		ReadTimeout:  5 * time.Second,
 		WriteTimeout: 10 * time.Second,
 		IdleTimeout:  60 * time.Second,
