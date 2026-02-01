@@ -27,7 +27,7 @@ func main() {
 	srv := &http.Server{
 		Addr: cfg.ServerPort,
 		Handler: cors.New(cors.Options{
-			AllowedOrigins:   []string{"http://localhost:5173"},
+			AllowedOrigins:   []string{"http://localhost:5173", "http://localhost:3000", "http://localhost:3001", "http://localhost", "http://perf-assist.local:3001", "http://perf-assist.local"},
 			AllowedMethods:   []string{http.MethodGet, http.MethodPost, http.MethodPut, http.MethodDelete, http.MethodOptions},
 			AllowedHeaders:   []string{"Content-Type"},
 			AllowCredentials: false,
