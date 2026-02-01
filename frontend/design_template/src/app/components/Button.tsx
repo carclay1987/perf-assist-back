@@ -1,0 +1,38 @@
+import { ReactNode } from 'react';
+
+interface ButtonProps {
+  children: ReactNode;
+  onClick?: () => void;
+  variant?: 'primary' | 'secondary' | 'outline';
+  className?: string;
+  disabled?: boolean;
+  type?: 'button' | 'submit';
+}
+
+export function Button({ 
+  children, 
+  onClick, 
+  variant = 'primary', 
+  className = '',
+  disabled = false,
+  type = 'button'
+}: ButtonProps) {
+  const baseStyles = 'px-6 py-3 rounded-lg font-medium transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center';
+  
+  const variantStyles = {
+    primary: 'bg-accent text-accent-foreground hover:bg-accent/90 shadow-md hover:shadow-lg border-2 border-transparent',
+    secondary: 'bg-secondary text-secondary-foreground hover:bg-secondary/80 border-2 border-transparent',
+    outline: 'border-2 border-border text-foreground hover:bg-muted'
+  };
+
+  return (
+    <button
+      type={type}
+      onClick={onClick}
+      disabled={disabled}
+      className={`${baseStyles} ${variantStyles[variant]} ${className}`}
+    >
+      {children}
+    </button>
+  );
+}
