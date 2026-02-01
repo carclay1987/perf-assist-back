@@ -1,0 +1,40 @@
+# Git
+.git
+.gitignore
+
+# Go
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Test
+.coverage/
+*.out
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Docker
+docker-compose.override.yml
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Build
+bin/
+build/
+
+# Logs
+*.log
+
+# Environment
+.env
+
+# README
+README.md

@@ -11,22 +11,21 @@ import (
 
 	"github.com/rs/cors"
 
+	"github.com/inkuroshev/perf-assist-backend/internal/config"
 	"github.com/inkuroshev/perf-assist-backend/internal/server"
 )
 
 func main() {
-	// базовый адрес
-	addr := ":8080"
-	if v := os.Getenv("PORT"); v != "" {
-		addr = ":" + v
-	}
+	// загрузка конфигурации
+	cfg := config.New()
 
 	// создаём Gin-роутер через внутренний серверный слой
-	r := server.NewRouter()
+	// передаем конфигурацию в NewRouter
+	r := server.NewRouter(cfg)
 
 	// оборачиваем Gin в стандартный http.Server для graceful shutdown
 	srv := &http.Server{
-		Addr: addr,
+		Addr: cfg.ServerPort,
 		Handler: cors.New(cors.Options{
 			AllowedOrigins:   []string{"http://localhost:5173"},
 			AllowedMethods:   []string{http.MethodGet, http.MethodPost, http.MethodPut, http.MethodDelete, http.MethodOptions},
@@ -39,7 +38,7 @@ func main() {
 	}
 
 	go func() {
-		log.Printf("starting perf-assist-backend on %s", addr)
+		log.Printf("starting perf-assist-backend on %s", cfg.ServerPort)
 		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
 			log.Fatalf("listen: %v", err)
 		}
