@@ -1,0 +1,164 @@
+import { useState } from 'react';
+import { Card, CardHeader, CardContent } from './Card';
+import { Button } from './Button';
+import { Badge } from './Badge';
+import { Input } from './ui/input';
+import { Textarea } from './ui/textarea';
+import { Checkbox } from './ui/checkbox';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from './ui/dialog';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from './ui/dropdown-menu';
+import { Calendar as CalendarIcon, ChevronDown } from 'lucide-react';
+import { Calendar } from './ui/calendar';
+
+export function UiKitView() {
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [checked, setChecked] = useState(false);
+  const [date, setDate] = useState<Date | undefined>(new Date());
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [selectedItem, setSelectedItem] = useState<string | null>(null);
+
+  return (
+    <div className="max-w-5xl mx-auto p-8 space-y-8">
+      <div>
+        <h1 className="text-3xl font-semibold text-foreground mb-2">UI Kit</h1>
+        <p className="text-muted-foreground">
+          Песочница для компонентов из <code>src/app/components/ui</code>. Здесь можно посмотреть внешний вид и пример
+          использования основных элементов.
+        </p>
+      </div>
+
+      {/* Buttons */}
+      <Card className="bg-card">
+        <CardHeader className="border-b border-border">
+          <h2 className="text-xl font-semibold text-card-foreground mb-1">Кнопки</h2>
+          <p className="text-muted-foreground text-sm">Примеры использования компонента Button</p>
+        </CardHeader>
+        <CardContent className="pt-4 space-y-4">
+          <div className="flex flex-wrap gap-3">
+            <Button variant="primary">Primary</Button>
+            <Button variant="secondary">Secondary</Button>
+            <Button variant="outline">Outline</Button>
+            <Button variant="primary" disabled>
+              Disabled
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Badges & Checkbox */}
+      <Card className="bg-card">
+        <CardHeader className="border-b border-border">
+          <h2 className="text-xl font-semibold text-card-foreground mb-1">Бейджи и чекбокс</h2>
+          <p className="text-muted-foreground text-sm">Состояния и статусы</p>
+        </CardHeader>
+        <CardContent className="pt-4 space-y-4">
+          <div className="flex flex-wrap gap-3 items-center">
+            <Badge variant="success">Success</Badge>
+            <Badge variant="info">Info</Badge>
+            <Badge variant="warning">Warning</Badge>
+          </div>
+          <div className="flex items-center gap-2">
+            <Checkbox
+              checked={checked}
+              onCheckedChange={(v) => setChecked(Boolean(v))}
+            />
+            <span className="text-sm text-foreground">Пример чекбокса (checked: {checked ? 'true' : 'false'})</span>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Inputs */}
+      <Card className="bg-card">
+        <CardHeader className="border-b border-border">
+          <h2 className="text-xl font-semibold text-card-foreground mb-1">Поля ввода</h2>
+          <p className="text-muted-foreground text-sm">Input и Textarea</p>
+        </CardHeader>
+        <CardContent className="pt-4 space-y-4">
+          <div className="space-y-2">
+            <label className="text-sm text-muted-foreground">Input</label>
+            <Input className="text-foreground" placeholder="Введите текст" />
+          </div>
+          <div className="space-y-2">
+            <label className="text-sm text-muted-foreground">Textarea</label>
+            <Textarea rows={4} className="text-foreground" placeholder="Многострочный ввод" />
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Dialog */}
+      <Card className="bg-card">
+        <CardHeader className="border-b border-border">
+          <h2 className="text-xl font-semibold text-card-foreground mb-1">Диалог</h2>
+          <p className="text-muted-foreground text-sm">Компонент Dialog (Radix)</p>
+        </CardHeader>
+        <CardContent className="pt-4">
+          <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+            <DialogTrigger asChild>
+              <Button variant="outline">Открыть диалог</Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Пример диалога</DialogTitle>
+              </DialogHeader>
+              <p className="text-sm text-muted-foreground">
+                Здесь можно показать любое содержимое: формы, подтверждения, дополнительную информацию.
+              </p>
+            </DialogContent>
+          </Dialog>
+        </CardContent>
+      </Card>
+
+      {/* Dropdown & Calendar */}
+      <Card className="bg-card">
+        <CardHeader className="border-b border-border">
+          <h2 className="text-xl font-semibold text-card-foreground mb-1">Dropdown и календарь</h2>
+          <p className="text-muted-foreground text-sm">Примеры интерактивных компонентов</p>
+        </CardHeader>
+        <CardContent className="pt-4 space-y-6">
+          <div className="flex flex-wrap gap-4 items-center">
+            <DropdownMenu open={dropdownOpen} onOpenChange={setDropdownOpen}>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" className="flex items-center gap-2">
+                  {selectedItem ?? 'Выбрать пункт'}
+                  <ChevronDown
+                    className={`w-4 h-4 transition-transform duration-150 ${
+                      dropdownOpen ? 'rotate-180' : 'rotate-0'
+                    }`}
+                  />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="bg-popover text-popover-foreground min-w-[220px]">
+                <DropdownMenuItem onClick={() => setSelectedItem('Пункт 1: базовое действие')}>
+                  Пункт 1: базовое действие
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setSelectedItem('Пункт 2: вторичное действие')}>
+                  Пункт 2: вторичное действие
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setSelectedItem('Пункт 3: ещё один вариант')}>
+                  Пункт 3: ещё один вариант
+                </DropdownMenuItem>
+                <DropdownMenuItem disabled>
+                  Пункт 4: недоступен
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+
+          <div className="space-y-2">
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <CalendarIcon className="w-4 h-4" />
+              <span>Календарь (react-day-picker)</span>
+            </div>
+            <div className="border border-border rounded-lg p-3 inline-block bg-background">
+              <Calendar
+                mode="single"
+                selected={date}
+                onSelect={setDate}
+              />
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
